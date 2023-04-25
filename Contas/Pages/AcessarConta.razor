@@ -1,0 +1,13 @@
+﻿@page "/acesso/{conta}"
+
+<h1>Conta: @conta</h1>
+
+<button>Saldo </button>
+<button>Sacar </button>
+<button>Depositar </button>
+<button>Transferir </button>
+
+@code {
+    [Parameter]
+    public string? conta { get; set; }
+}

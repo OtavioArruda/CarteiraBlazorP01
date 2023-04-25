@@ -1,0 +1,26 @@
+﻿@page "/todascarteiras"
+@inject DadosCarteiras dadosCarteira
+@inject NavigationManager nav
+
+<h1>ListarCarteiras</h1>
+@if(dadosCarteira.ListaDados is not null)
+{
+    foreach(var carteira in dadosCarteira.ListaDados)
+    {
+        <h5>Carteira: @carteira.Dono 
+            Saldo: @carteira.Saldo </h5>
+            <button 
+                @onclick="() => AbrirTela(carteira.Dono)"
+                >Acessar 
+            </button>
+    }
+}
+
+@code {
+
+    public void AbrirTela(string carteiraNome)
+    {
+        nav.NavigateTo("/acesso/" + carteiraNome);
+    }
+
+}

@@ -1,0 +1,35 @@
+﻿@page "/cadastro"
+@inject DadosCarteiras  dados
+
+<PageTitle>Cadastrar Carteira</PageTitle>
+
+<h5>Nome:</h5>
+
+<input type="text" @bind=nome/>
+<h5>Valor Deposito Inicial:</h5>
+
+<input type="text" @bind=valor/>
+<br><br>
+<button class="btn btn-primary" @onclick="CriarConta">
+    Criar Conta</button>
+
+    <br><br>
+    <h1>@mensagem</h1>
+
+
+@code {
+    private string nome;
+    private double valor;
+    private string mensagem="";
+
+    private void CriarConta()
+    {
+        Carteira novaConta = new Carteira();
+        novaConta.Dono = nome;
+        novaConta.Depositar(valor);
+        dados.ListaDados.Add(novaConta);
+        mensagem = $"Carteira Criada com Sucesso ({nome} Saldo:{valor})";
+        nome = "";
+        valor = 0;
+    }
+}
