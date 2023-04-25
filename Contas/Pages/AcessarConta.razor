@@ -1,13 +1,51 @@
 ﻿@page "/acesso/{conta}"
+@inject DadosCarteiras dados;
 
-<h1>Conta: @conta</h1>
+@if (carteira is not null)
+{
+    <h1>Conta: @carteira.Dono</h1>
 
-<button>Saldo </button>
-<button>Sacar </button>
-<button>Depositar </button>
-<button>Transferir </button>
+    <button @onclick="() => EscolherOperacao(1)">Saldo </button>
+    <button @onclick="() => EscolherOperacao(2)">Sacar </button>
+    <button @onclick="() => EscolherOperacao(3)">Depositar </button>
+    <button @onclick="() => EscolherOperacao(4)">Transferir </button>
+
+    @switch (operacao)
+    {
+        case 1:
+            <h1>Seu Saldo Atual é de R$ @carteira.Saldo .</h1>
+            break;
+        case 2:
+
+            break;
+        case 3:
+            <Deposito Conta="carteira"></Deposito>
+            break;
+        case 4:
+            <Transferencia Conta="carteira"></Transferencia>
+            break;
+    }
+}
+else
+{
+    <h1>ERRO 777! Carteira Não Encontrada!</h1>
+}
 
 @code {
     [Parameter]
     public string? conta { get; set; }
+    private int operacao = 0;
+    private Carteira? carteira = null;
+
+
+    //Ao Incializar a Pagina(Tela- Interface Grafica)
+    protected override void OnInitialized()
+    {
+        carteira = this.dados.ListaDados.FirstOrDefault(c => c.Dono == conta);
+    }
+
+    public void EscolherOperacao(int operacao)
+    {
+        this.operacao = operacao;
+    }
 }

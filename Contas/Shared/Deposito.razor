@@ -1,0 +1,31 @@
+﻿<h3>Dados para Deposito</h3>
+<br><br>
+<p>Valor Para Deposito:</p>
+<input type="number" @bind="valor"/>
+<button @onclick="Depositar">Confirmar Deposito </button>
+
+@if(depositoOk is not null)
+{
+    @if (depositoOk == true)
+    {
+        <h1>Deposito Realizado com sucesso!</h1>
+    }
+    else
+    {
+       <h1>Erro! não foi possivel realizar está operação</h1>  
+    }
+}
+
+@code {
+    [Parameter]
+    public Carteira? Conta { get; set; }
+    
+    private bool? depositoOk = null;
+    private double valor;
+
+    private void Depositar()
+    {
+        depositoOk = Conta.Depositar(valor);
+    }
+
+}

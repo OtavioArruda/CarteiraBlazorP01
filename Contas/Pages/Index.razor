@@ -1,9 +1,13 @@
 ﻿@page "/"
+@inject DadosCarteiras dados
+<p>Data do Sistema:</p>
+<br>
+<p>@dados.DataDoSistema</p>
 
-<PageTitle>Index</PageTitle>
+<br><br>
+<p>Atualizar Data</p>
 
-<h1>Hello, world!</h1>
+<input type="datetime" @bind=dados.DataDoSistema></input>
 
-Welcome to your new app.
-
-<SurveyPrompt Title="How is Blazor working for you?" />
+<br>
+<button>Cobrar Tarifas (Todos as Contas) </button>
