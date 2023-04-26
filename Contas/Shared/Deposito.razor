@@ -1,4 +1,6 @@
-﻿<h3>Dados para Deposito</h3>
+﻿@inject DadosCarteiras dados
+
+<h3>Dados para Deposito</h3>
 <br><br>
 <p>Valor Para Deposito:</p>
 <input type="number" @bind="valor"/>
@@ -25,7 +27,7 @@
 
     private void Depositar()
     {
-        depositoOk = Conta.Depositar(valor);
+        depositoOk = Conta.Depositar(valor, DataDoSistema: dados.DataDoSistema);
     }
 
 }

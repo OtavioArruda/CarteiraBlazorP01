@@ -7,12 +7,16 @@
 {
     foreach(var carteira in dadosCarteira.ListaDados)
     {
-        <h5>Carteira: @carteira.Dono 
-            Saldo: @carteira.Saldo </h5>
-            <button 
-                @onclick="() => AbrirTela(carteira.Dono)"
-                >Acessar 
-            </button>
+        <h5>Numero da conta: @carteira.NumeroDaConta</h5>
+        <h5>CPF: @carteira.CPF</h5>
+        <h5>Carteira: @carteira.Dono</h5>
+        <h5>Saldo: @carteira.Saldo </h5>
+        <h5>Limite da conta: @carteira.LimiteConta </h5>
+        <button 
+            @onclick="() => AbrirTela(carteira.Dono)"
+            >Acessar 
+        </button>
+        <br />
     }
 }
 

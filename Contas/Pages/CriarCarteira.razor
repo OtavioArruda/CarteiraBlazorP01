@@ -4,12 +4,17 @@
 <PageTitle>Cadastrar Carteira</PageTitle>
 
 <h5>Nome:</h5>
-
 <input type="text" @bind=nome/>
-<h5>Valor Deposito Inicial:</h5>
+<br><br>
 
+<h5>CPF:</h5>
+<input type="text" min="11" @bind=CPF/>
+<br><br>
+
+<h5>Valor Deposito Inicial:</h5>
 <input type="text" @bind=valor/>
 <br><br>
+
 <button class="btn btn-primary" @onclick="CriarConta">
     Criar Conta</button>
 
@@ -20,16 +25,23 @@
 @code {
     private string nome;
     private double valor;
-    private string mensagem="";
+    private string CPF;
+    private string mensagem = "";
 
     private void CriarConta()
     {
         Carteira novaConta = new Carteira();
+
         novaConta.Dono = nome;
-        novaConta.Depositar(valor);
+        novaConta.CPF = CPF;
+        novaConta.Depositar(valor, true);
+
         dados.ListaDados.Add(novaConta);
-        mensagem = $"Carteira Criada com Sucesso ({nome} Saldo:{valor})";
+
+        mensagem = $"Carteira Criada com Sucesso ({novaConta.NumeroDaConta} {novaConta.LimiteConta} {nome} Saldo:{valor})";
+
         nome = "";
+        CPF = "";
         valor = 0;
     }
 }

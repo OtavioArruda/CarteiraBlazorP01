@@ -1,16 +1,25 @@
 ﻿@inject DadosCarteiras dados
 
 <h3>Transferencia</h3>
-@if (transferenciaOk is null || transferenciaOk == false)
+@if ((transferenciaOk is null || transferenciaOk == false) && confirmarCpf == false)
 {
     <p>Conta Destino</p>
-<input type="text" @bind=contaDestino/>
-<br><br>
-<p>Valor da Transferencia</p>
-<input type="number" @bind=ValorTransferencia/>
-<br><br>
-<button @onclick=Transferir > Confirma Transferencia</button>
+    <input type="text" @bind=contaDestino/>
+    <br><br>
+    <p>Valor da Transferencia</p>
+    <input type="number" @bind=ValorTransferencia/>
+    <br><br>
+    <button @onclick=Transferir > Confirma Transferencia</button>
 }
+
+@if (confirmarCpf == true)
+{
+    <p>Confirme os 3 primeiros digitos do CPF da sua conta</p>
+    <input type="text" @bind=cpfParaTeste/>
+    <br><br>
+    <button @onclick=ConfirmaCpf> Confirma CPF</button>
+}
+
 
 @if(transferenciaOk is not null)
 {
@@ -36,16 +45,26 @@
     [Parameter]
     public Carteira Conta { get; set; }
     bool? transferenciaOk = null;
+    bool confirmarCpf = false;
     string contaDestino;
     double ValorTransferencia;
+    string cpfParaTeste = "";
 
     public void Transferir()
     {
-        Carteira destino =  dados.ListaDados.FirstOrDefault(c => c.Dono == contaDestino);
+        Carteira destino = dados.ListaDados.FirstOrDefault(c => c.Dono == contaDestino);
+
         if (destino is not null)
         {
-            Conta.Transferir(destino, ValorTransferencia);
-            transferenciaOk = true;
+            if(ValorTransferencia > 1000)
+            {
+                confirmarCpf = true;
+            }
+            else
+            { 
+                Conta.Transferir(destino, ValorTransferencia);
+                transferenciaOk = true;
+            }
         }
         else
         {
@@ -53,4 +72,20 @@
         }
     }
 
+    public void ConfirmaCpf()
+    {
+        if(cpfParaTeste  == Conta.CPF.Substring(0, 3))
+        {
+            Carteira destino = dados.ListaDados.FirstOrDefault(c => c.Dono == contaDestino);
+
+            Conta.Transferir(destino, ValorTransferencia);
+
+            confirmarCpf = false;
+            transferenciaOk = true;
+        }
+        else
+        {
+            transferenciaOk = false;
+        }
+    }
 }

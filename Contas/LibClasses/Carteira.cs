@@ -15,35 +15,66 @@ namespace Contas.LibClasses
         }
         public string Dono { get; set; }
 
-        public bool Sacar(double Valor)
+        public string CPF { get; set; }
+
+        public double LimiteConta { get; private set; }
+
+        public long NumeroDaConta { get; private set; }
+
+        public Carteira() 
         {
-            if (Valor > this.Saldo)
-                return false;
+            NumeroDaConta = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+        }
+
+        public bool Sacar(double Valor, bool IsTransferencia = false, DateTime? DataDoSistema = null)
+        {
+            if (DataDoSistema.HasValue)
+            {
+                if (DataDoSistema.Value.Hour < 8 || DataDoSistema.Value.Hour > 17) return false;
+            }
+
+            if (Valor > this.Saldo) return false;
+
+            if (LimiteConta < Valor && IsTransferencia == false) return false;
 
             this.Saldo -= Valor;
-            //this.Saldo = Saldo - Valor;
+
             return true;
         }
 
-        public bool Depositar(double Valor)
+        public bool Depositar(double Valor, bool AlterarLimite = false, DateTime? DataDoSistema = null)
         {
+            if(DataDoSistema.HasValue)
+            {
+                if(DataDoSistema.Value.Hour < 8 || DataDoSistema.Value.Hour > 17) return false;
+            }
+
             this.Saldo += Valor;
+
+            if(AlterarLimite)
+            {
+                this.LimiteConta = Valor * 0.1;
+            }
+
             return true;
         }
 
-        public bool Transferir
-            (Carteira destino, double valor)
+        public bool Transferir (Carteira destino, double valor)
         {  
             //se nao tiver saldo cancela transferencia retornando false
-            if (this.Saldo <= valor)
-                return false;
+            if (this.Saldo <= valor) return false;
 
             //Executa transferencia tirando da conta origram e deposinto na conta destino
-            this.Sacar(valor);
+
+            this.Sacar(valor, IsTransferencia: true);
             bool tOK = destino.Depositar(valor);
-            if (tOK)// se transferencia ocorreu com sucesso retorna true
-                return true;
-            else// caso ocorrer erro faz o rollback voltando dinheiro para conta de origem
+            // se transferencia ocorreu com sucesso retorna true
+
+            if (tOK) return true;
+
+            // caso ocorrer erro faz o rollback voltando dinheiro para conta de origem
+
+            else
             {
                 this.Depositar(valor);
                 return false;
