@@ -1,5 +1,7 @@
 ﻿@page "/"
 @inject DadosCarteiras dados
+@inject DadosCarteiras dadosCarteira
+
 <p>Data do Sistema:</p>
 <br>
 <p>@dados.DataDoSistema</p>
@@ -10,4 +12,23 @@
 <input type="datetime" @bind=dados.DataDoSistema></input>
 
 <br>
-<button>Cobrar Tarifas (Todos as Contas) </button>
+<button @onclick="CobrarTodasTarifas">Cobrar Tarifas (Todos as Contas) </button>
+<br>    
+
+@if(tarifasCobradas)
+{
+    <p>Todas as tarifas pendentes foram cobradas</p>
+}
+
+@code {
+    bool tarifasCobradas = false;
+
+    public void CobrarTodasTarifas()
+    {
+        foreach(var carteira in dadosCarteira.ListaDados)
+        {
+            carteira.CobrarTarifa();
+            tarifasCobradas = true;
+        } 
+    }
+}

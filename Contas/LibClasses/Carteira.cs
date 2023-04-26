@@ -21,6 +21,8 @@ namespace Contas.LibClasses
 
         public long NumeroDaConta { get; private set; }
 
+        public bool TarifaCobrada { get; private set; }
+
         public Carteira() 
         {
             NumeroDaConta = DateTimeOffset.Now.ToUnixTimeMilliseconds();
@@ -78,6 +80,15 @@ namespace Contas.LibClasses
             {
                 this.Depositar(valor);
                 return false;
+            }
+        }
+
+        public void CobrarTarifa()
+        {
+            if(!this.TarifaCobrada)
+            {
+                this.Saldo -= 19.9;
+                this.TarifaCobrada = true;
             }
         }
     }
